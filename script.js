@@ -76,17 +76,17 @@ class PlayerMusicComponent {
     switchCommands(e) {
         const commandAction = keyboardCommands[e.code].action;
         switch(commandAction) {
-            case 'paused':
+            case 'pause':
                 document.params.pause(); break;
-            case 'played':
+            case 'play':
                 document.params.play(); break;
-            case 'muted':
+            case 'mute':
                 //;
                 break;
-            case 'upVolume':
+            case 'volumeUp':
                 //
                 break;
-            case 'downVolume':
+            case 'volumeDown':
                 //
                 break;
             default:

@@ -3,12 +3,12 @@ keyboardCommands = {
         key: 'p',
         code: 'keyP',
         keyCode: 80,
-        action: 'paused'
+        action: 'pause'
     },
     Space: {
         key: ' ',
         code: 'Space',
         keyCode: 32,
-        action: 'played'
+        action: 'play'
     }
 }
