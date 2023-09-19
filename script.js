@@ -1,106 +1,87 @@
-const musicContainer = document.getElementById('music-container');
+class PlayerMusicComponent {
+    constructor() {
+        this.audio = document.getElementById('audio');
+        this.queue = musics;
+        
+        this.pausedStatus = document.getElementById('paused');
+        this.progressStatus = document.getElementById('progress');
 
-const audio = document.getElementById('audio');
-
-const durationContainer = document.getElementById('duration-container');
-const durationCurr = document.getElementById('durantion-curr');
-const durationTotal = document.getElementById('duration-total');
-const pausedStatus = document.getElementById('paused');
-const progressStatus = document.getElementById('progress');
-
-const songs = [
-    '10 - Maglore - Debaixo de Chuva'
-];
-
-let songIndex = 0;
-
-loadSong(songs[songIndex]);
-
-function loadSong(song) {
-  audio.src = `music/${song}.mp3`;
-}
-
-function playSong() {
-    audio.play();
-}
-
-function pauseSong() {
-    pausedStatus.innerHTML = "<b>(PAUSED)</b> "
-    audio.pause();
-}
-
-function prevSong() {
-    songIndex--;
-
-    if (songIndex < 0) {
-      songIndex = songs.length - 1;
+        this.currentTime = document.getElementById('current-time');
+        this.duration = document.getElementById('duration');
     }
 
-    loadSong(songs[songIndex]);
-
-    playSong();
-}
-
-function nextSong() {
-    songIndex++;
-  
-    if (songIndex > songs.length - 1) {
-      songIndex = 0;
+    play() {
+        this.pausedStatus.innerHTML = ""
+        
+        this.eventListenerProgress()
+        this.eventListenerKeyPress()
+        
+        audio.play();
     }
-  
-    loadSong(songs[songIndex]);
-  
-    playSong();
-}
 
-function formatTime(time) {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time - minutes * 60);
-  
-    const minuteValue = minutes.toString();
-    const secondValue = seconds.toString().padStart(2, '0');
-  
-    const mediaTime = `${minuteValue}:${secondValue}`;
-    return mediaTime;
-}
+    pause() {
+        this.pausedStatus.innerHTML = "<b>(PAUSED)</b> "
+        audio.pause();
+    }
 
-function updateProgress(e) {
-    const { duration, currentTime } = e.srcElement;
+    previous() {}
+    next() {}
+    
+    formatMediaTime(time) {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time - minutes * 60);
+      
+        const minuteValue = minutes.toString();
+        const secondValue = seconds.toString().padStart(2, '0');
+      
+        return `${minuteValue}:${secondValue}`;
+    }
 
-    const progressPercent = parseFloat((currentTime / duration) * 100).toFixed(0);
-    progressStatus.firstChild.textContent = `${progressPercent}%`;
+    getProgress(currTime, duration) {
+        return parseFloat((currTime / duration) * 100).toFixed(0);
+    }
 
-    durationCurr.firstChild.textContent = formatTime(currentTime);
-    durationTotal.firstChild.textContent = formatTime(duration)
-}   
+    updateProgress(e) {
+        const { duration, currentTime, params } = e.srcElement;
 
+        params.progressStatus.firstChild.textContent = `(${player.getProgress(currentTime, duration)}%)`;
+        params.currentTime.firstChild.textContent = player.formatMediaTime(currentTime);
+        params.duration.firstChild.textContent = player.formatMediaTime(duration);
+    }   
 
-keyboardCommands = {
-    paused: {
-        p: {
-            key: 'p',
-            code: 'keyP',
-            keyCode: 80
-        },
-        space: {
-            key: ' ',
-            code: 'Space',
-            keyCode: 32,
+    switchCommands(e) {
+        const commandAction = keyboardCommands[e.code].action;
+        switch(commandAction) {
+            case 'paused':
+                document.params.pause(); break;
+            case 'played':
+                document.params.play(); break;
+            case 'muted':
+                //;
+                break;
+            case 'upVolume':
+                //
+                break;
+            case 'downVolume':
+                //
+                break;
+            default:
+                //
+                break;
         }
     }
+
+    eventListenerProgress() {
+        this.audio.params = this;
+        this.audio.addEventListener('timeupdate', this.updateProgress);
+    }
+
+    eventListenerKeyPress() {
+        document.params = this;
+        document.addEventListener('keyup', this.switchCommands)
+    }
+
 }
 
-document.body.onkeyup = function(e) {
-    console.log(e)
-    if (e.key == "p" ||
-        e.code == "keyP" ||      
-        e.keyCode == 80      
-    ) {
-     pauseSong()
-    }
-  }
-
-audio.addEventListener('ended', nextSong);
-audio.addEventListener('timeupdate', updateProgress);
-
-playSong();
+const player = new PlayerMusicComponent();
+player.play()
