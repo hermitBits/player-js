@@ -41,14 +41,12 @@ class PlayerMusicComponent {
         this.audio.src = music.src;
     }
 
-    playerLoadQueue() {
-        const firstMusicmusics = musics[0];
-        this.loadMusic(firstMusicmusics);
-    }  
-
     prepareComponent(){
         this.eventListenerKeyPress()
         this.eventListenerProgress()
+        
+        const firstMusic = musics[0];
+        this.loadMusic(firstMusic);
     }
     
     formatMediaTime(time) {
@@ -108,5 +106,4 @@ class PlayerMusicComponent {
 }
 
 const player = new PlayerMusicComponent();
-player.playerLoadQueue();
 player.prepareComponent();
